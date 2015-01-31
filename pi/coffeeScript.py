@@ -2,6 +2,8 @@ import socket
 import fcntl
 import struct
 
+IF = 'wlan0'
+
 def get_ip_address(ifname):
       s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
       return socket.inet_ntoa(fcntl.ioctl(
@@ -10,8 +12,7 @@ def get_ip_address(ifname):
         struct.pack('256s', ifname[:15])
       )[20:24])
 
-print get_ip_address('lo')
-print get_ip_address('eth0')
+print get_ip_address(IF)
 
 sock = socket.socket()
 
@@ -19,7 +20,7 @@ print "created socket"
 
 PORT = 5432
 
-sock.bind((get_ip_address('eth0'),PORT))
+sock.bind((get_ip_address(IF),PORT))
 
 print "socket binded to %s" %(PORT)
 
