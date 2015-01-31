@@ -1,5 +1,5 @@
-import RPi.GPIO as GPI
-
+import RPi.GPIO as GPIO
+import time
 pin = 7
 GPIO.setmode(GPIO.BOARD)
 
