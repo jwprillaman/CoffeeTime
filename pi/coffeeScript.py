@@ -3,6 +3,8 @@ import fcntl
 import struct
 import sys
 import RPi.GPIO as GPIO
+import time
+
 
 REY_PIN = 11
 TRIG = 16
@@ -33,7 +35,7 @@ def setGPIO():
       GPIO.setup(REY_PIN, GPIO.OUT)
       GPIO.setup(ECHO, GPIO.IN)
       GPIO.setup(TRIG, GPIO.OUT)
-def useSonar(client)
+def useSonar(client):
   distance = 7
   while DIS_MAX > distance and distance > DIS_MIN:
     #let sensor settle for 1 second
@@ -44,19 +46,18 @@ def useSonar(client)
     time.sleep(0.00001)
     GPIO.output(TRIG, False)
 
-    while(GPIO.input(ECHO)==0:
+    while GPIO.input(ECHO)==0:
         pulse_start = time.time()
-    while(GPIO.input(ECHO)==1:
+    while GPIO.input(ECHO)==1:
       pulse_end = time.time()
     distance = (pulse_end - pulse_start) * 17150
     distance = round(distance, 2)
 
     print "Distance: " , distance, "cm"
 
-    GPIO.output(REY_PIN, False)
-    client.send("PickedUp");
+  GPIO.output(REY_PIN, False)
+  client.send("PickedUp");
 
-    GPIO.cleanup()
 
 #listen for client alarm 1
 def receiveAlarm(client):
@@ -69,7 +70,7 @@ def receiveAlarm(client):
 
 #START Setup
 
-setGPIO(REY_PIN)
+setGPIO()
 
 print get_ip_address(IF)
 
@@ -101,5 +102,5 @@ while True:
   
   receiveAlarm(client)
 #  turnOnSensor(client)
- useSonar()
- client.close()
+  useSonar(client)
+  client.close()
