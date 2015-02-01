@@ -9,7 +9,7 @@ if len(sys.argv) < 2 :
 #interface that server will be on
 IF = sys.argv[1]
 
-print 'interface:  IF'
+print 'interface: ' ,IF
 
 #get the ip address for interface IF
 def get_ip_address(ifname):
