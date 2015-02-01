@@ -3,11 +3,14 @@ import fcntl
 import struct
 import sys
 import RPi.GPIO as GPIO
+import time
+
 
 REY_PIN = 11
-SEN_PIN = 15
-
-
+TRIG = 16
+ECHO = 18
+DIS_MAX = 10
+DIS_MIN = 5
 
 if len(sys.argv) < 2 :
   sys.exit('Usage: %s interface' % sys.argv[0])
@@ -27,10 +30,34 @@ def get_ip_address(ifname):
       )[20:24])
 
 #set GPIO properties
-def setGPIO(SEN_PIN, REY_PIN):
+def setGPIO():
       GPIO.setmode(GPIO.BOARD)
       GPIO.setup(REY_PIN, GPIO.OUT)
-      GPIO.setup(SEN_PIN, GPIO.IN)
+      GPIO.setup(ECHO, GPIO.IN)
+      GPIO.setup(TRIG, GPIO.OUT)
+def useSonar(client):
+  distance = 7
+  while DIS_MAX > distance and distance > DIS_MIN:
+    #let sensor settle for 1 second
+    GPIO.output(TRIG, False)
+    time.sleep(1)
+
+    GPIO.output(TRIG, True)
+    time.sleep(0.00001)
+    GPIO.output(TRIG, False)
+
+    while GPIO.input(ECHO)==0:
+        pulse_start = time.time()
+    while GPIO.input(ECHO)==1:
+      pulse_end = time.time()
+    distance = (pulse_end - pulse_start) * 17150
+    distance = round(distance, 2)
+
+    print "Distance: " , distance, "cm"
+
+  GPIO.output(REY_PIN, False)
+  client.send("PickedUp");
+
 
 #listen for client alarm 1
 def receiveAlarm(client):
@@ -39,21 +66,11 @@ def receiveAlarm(client):
       if 'coffeeTime' in data:
         GPIO.output(REY_PIN,1)
 
-# turn on the coffee sensor
-def turnOnSensor(client):
-  count = 0
-  while 1:
-    if GPIO.input(SEN_PIN):
-      print "motion detected"
-      count = count + 1
-    if count > 4:
-      break
-  client.send("PickedUp");
 
 
 #START Setup
 
-setGPIO(REY_PIN)
+setGPIO()
 
 print get_ip_address(IF)
 
@@ -84,5 +101,6 @@ while True:
   client.send('Begin Brewing')
   
   receiveAlarm(client)
-  turnOnSensor(client)
+#  turnOnSensor(client)
+  useSonar(client)
   client.close()
