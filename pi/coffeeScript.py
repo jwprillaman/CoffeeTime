@@ -21,7 +21,7 @@ def get_ip_address(ifname):
       )[20:24])
 
 def receiveAlarm(client):
-      data = conn.recv(1024)
+      data = client.recv(1024)
       print data
         
 print get_ip_address(IF)
