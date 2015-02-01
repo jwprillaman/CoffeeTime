@@ -2,8 +2,8 @@ import socket
 import fcntl
 import struct
 import sys
-import RPi.GIPO as GIPO
-
+import RPi.GPIO as GPIO
+PIN = 11
 if len(sys.argv) < 2 :
   sys.exit('Usage: %s interface' % sys.argv[0])
 
@@ -30,8 +30,8 @@ def setGPIO(PIN):
 def receiveAlarm(client):
       data = client.recv(1024)
       print data
-      if data == 'coffeeTime':
-        GIPO.output(pin,1)
+      if 'coffeeTime' in data:
+        GPIO.output(PIN,1)
         
 setGPIO(PIN)
 print get_ip_address(IF)
