@@ -9,8 +9,8 @@ import time
 REY_PIN = 11
 TRIG = 16
 ECHO = 18
-DIS_MAX = 10
-DIS_MIN = 5
+DIS_MAX = 8
+DIS_MIN = 0
 
 if len(sys.argv) < 2 :
   sys.exit('Usage: %s interface' % sys.argv[0])
