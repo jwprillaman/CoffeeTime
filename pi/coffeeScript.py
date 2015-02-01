@@ -2,14 +2,15 @@ import socket
 import fcntl
 import struct
 import sys
-
+import RPi.GPIO as GPIO
+PIN = 11
 if len(sys.argv) < 2 :
   sys.exit('Usage: %s interface' % sys.argv[0])
 
 #interface that server will be on
 IF = sys.argv[1]
 
-print 'interface:  IF'
+print 'interface: ' ,IF
 
 #get the ip address for interface IF
 def get_ip_address(ifname):
@@ -20,6 +21,19 @@ def get_ip_address(ifname):
         struct.pack('256s', ifname[:15])
       )[20:24])
 
+#set GPIO properties
+def setGPIO(PIN):
+      GPIO.setmode(GPIO.BOARD)
+      GPIO.setup(PIN, GPIO.OUT)
+      print 'GPIO set:  mode = Board; %s = GPIO.OUT' %PIN
+
+def receiveAlarm(client):
+      data = client.recv(1024)
+      print data
+      if 'coffeeTime' in data:
+        GPIO.output(PIN,1)
+        
+setGPIO(PIN)
 print get_ip_address(IF)
 
 #create socket
@@ -45,8 +59,8 @@ while True:
   client, addr = sock.accept()
 
   print 'Got connection from', addr
-
+  
   client.send('Begin Brewing')
-
+  receiveAlarm(client)
 
   client.close()
