@@ -8,5 +8,7 @@
     <string name="set_alarm_time_text">Set Alarm Time</string>
     <string name="set_alarm_text">Set Alarm</string>
     <string name="alarm_time_text">Time</string>
+    <string name="alarm_date_set">Alarm Date</string>
+    <string name="alarm_time">Alarm Time</string>
 
 </resources>

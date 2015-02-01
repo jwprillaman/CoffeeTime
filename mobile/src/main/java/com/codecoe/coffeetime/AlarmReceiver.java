@@ -24,20 +24,13 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Toast.makeText(context, "Alarm activated!", Toast.LENGTH_LONG).show();
 
-        /*Intent alarmIntent = new Intent(Intent.ACTION_VIEW);
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                context,
-                0,
-                alarmIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);*/
-
         alarmNotification = new NotificationCompat.Builder(context)
                 .setContentTitle("Go get yer coffee!")
                 .setTicker("Coffee Time!")
                 .setWhen(System.currentTimeMillis())
                 //.setContentIntent(pendingIntent)
                 .setAutoCancel(true)
-                .setSmallIcon(R.drawable.ic_launcher)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .build();
 
         Globals.mediaPlayer = MediaPlayer.create(context, R.raw.alarm_sound);
@@ -47,6 +40,10 @@ public class AlarmReceiver extends BroadcastReceiver {
         notificationManager =
                 (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(MY_NOTIFICATION_ID, alarmNotification);
+
+        while(Globals.mediaPlayer.isPlaying()){
+            AlarmView.cancelAlarm();
+        }
     }
 
 }
