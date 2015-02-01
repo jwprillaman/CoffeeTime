@@ -31,9 +31,9 @@ public class TimePickerFragment extends DialogFragment
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         Calendar current = Calendar.getInstance();
 
-        Calendar cal = AlarmView.alarm;
+        Calendar cal = Globals.alarm;
 
-        cal.set(Calendar.HOUR, hourOfDay);
+        cal.set(Calendar.HOUR_OF_DAY, hourOfDay);
         cal.set(Calendar.MINUTE, minute);
 
         if(cal.compareTo(current) <= 0){
@@ -42,7 +42,7 @@ public class TimePickerFragment extends DialogFragment
                     "Invalid Date/Time",
                     Toast.LENGTH_LONG).show();
         }else {
-            AlarmView.alarm = cal;
+            Globals.alarm = cal;
         }
     }
 

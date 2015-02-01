@@ -11,12 +11,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.net.UnknownHostException;
 import java.util.Calendar;
 
 
 public class AlarmView extends Activity {
-
-    public static Calendar alarm;
+    private static final String SERVER_IP = "192.168.1.250";
     private TextView alarmText;
 
     @Override
@@ -25,10 +28,17 @@ public class AlarmView extends Activity {
         setContentView(R.layout.activity_alarm_view);
 
         Calendar now = Calendar.getInstance();
-        alarm = now;
+        Globals.alarm = now;
 
-        alarmText = (TextView)findViewById(R.id.alarmTime);
-        alarmText.setText(now.get(Calendar.HOUR_OF_DAY) + ":" + now.get(Calendar.MINUTE));
+        alarmText = (TextView) findViewById(R.id.alarmTime);
+        int minute = now.get(Calendar.MINUTE);
+        String minuteText;
+        if(minute < 10){
+            minuteText = "0" + minute;
+            alarmText.setText(now.get(Calendar.HOUR_OF_DAY) + ":" + minuteText);
+        }else {
+            alarmText.setText(now.get(Calendar.HOUR_OF_DAY) + ":" + now.get(Calendar.MINUTE));
+        }
     }
 
 
@@ -64,12 +74,41 @@ public class AlarmView extends Activity {
         newFragment.show(getFragmentManager(), "datePicker");
     }
 
-    public void setAlarm(View v){
-        alarmText.setText(alarm.get(Calendar.HOUR_OF_DAY) + ":" + alarm.get(Calendar.MINUTE));
+    public void setAlarm(View v) {
+        alarmText = (TextView) findViewById(R.id.alarmTime);
+        int minute = Globals.alarm.get(Calendar.MINUTE);
+        String minuteText;
+        if(minute < 10){
+            minuteText = "0" + minute;
+            alarmText.setText(Globals.alarm.get(Calendar.HOUR_OF_DAY) + ":" + minuteText);
+        }else {
+            alarmText.setText(Globals.alarm.get(Calendar.HOUR_OF_DAY) + ":" + Globals.alarm.get(Calendar.MINUTE));
+        }
 
-        Intent intent = new Intent(getBaseContext(), AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), 1, intent, 0);
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm.getTimeInMillis(), pendingIntent);
+        Intent coffee_intent = new Intent(getBaseContext(), CoffeeReceiver.class);
+        PendingIntent pendingCoffeeIntent = PendingIntent.getBroadcast(getBaseContext(), 2, coffee_intent, 0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, Globals.alarm.getTimeInMillis(), pendingCoffeeIntent);
+
+        Intent alarm_intent = new Intent(getBaseContext(), AlarmReceiver.class);
+        PendingIntent pendingAlarmIntent = PendingIntent.getBroadcast(getBaseContext(), 1, alarm_intent, 0);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, Globals.alarm.getTimeInMillis(), pendingAlarmIntent);
+    }
+
+    public void cancelAlarm(){
+        ObjectInputStream ois;
+        try {
+            ois = new ObjectInputStream(Globals.socket.getInputStream());
+            String message = (String) ois.readObject();
+            if(message.equals("CoffeeTime")){
+                Globals.mediaPlayer.stop();
+            }
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

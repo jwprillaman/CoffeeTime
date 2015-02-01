@@ -30,8 +30,7 @@ public class DatePickerFragment extends DialogFragment
     public void onDateSet(DatePicker view, int year, int month, int day) {
         Calendar current = Calendar.getInstance();
 
-        Calendar cal = AlarmView.alarm;
-        System.out.println(AlarmView.alarm.getTime());
+        Calendar cal = Globals.alarm;
         cal.set(year, month, day);
 
         if(cal.compareTo(current) <= 0){
@@ -40,7 +39,7 @@ public class DatePickerFragment extends DialogFragment
                     "Invalid Date/Time",
                     Toast.LENGTH_LONG).show();
         }else {
-            AlarmView.alarm = cal;
+            Globals.alarm = cal;
         }
     }
 }

@@ -40,8 +40,9 @@
             android:text="@string/alarm_time_text"
             android:id="@+id/alarmTime"
             android:layout_gravity="center_horizontal"
-            android:textSize="150sp"
-            android:editable="false" />
+            android:textSize="125sp"
+            android:editable="false"
+            android:width="600dp" />
 
         <Button
             android:layout_width="wrap_content"
