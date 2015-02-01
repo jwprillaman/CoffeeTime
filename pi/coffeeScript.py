@@ -20,6 +20,10 @@ def get_ip_address(ifname):
         struct.pack('256s', ifname[:15])
       )[20:24])
 
+def receiveAlarm(client):
+      data = conn.recv(1024)
+      print data
+        
 print get_ip_address(IF)
 
 #create socket
@@ -45,8 +49,8 @@ while True:
   client, addr = sock.accept()
 
   print 'Got connection from', addr
-
+  
   client.send('Begin Brewing')
-
+  receiveAlarm(client)
 
   client.close()
