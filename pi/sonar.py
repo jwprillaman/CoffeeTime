@@ -1,4 +1,4 @@
-import RPI.GPIO as GPIO
+import RPi.GPIO as GPIO
 import time
 
 GPIO.setmode(GPIO.BOARD)
@@ -25,6 +25,8 @@ while GPIO.input(ECHO)==1:
   pulse_end = time.time()
 
 pulse_duration = pulse_end - pulse_start
+
+distance = pulse_duration * 17150
 
 distance = round(distance, 2)
 
