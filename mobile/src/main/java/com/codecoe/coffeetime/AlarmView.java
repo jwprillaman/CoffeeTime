@@ -95,12 +95,12 @@ public class AlarmView extends Activity {
         alarmManager.set(AlarmManager.RTC_WAKEUP, Globals.alarm.getTimeInMillis(), pendingAlarmIntent);
     }
 
-    public void cancelAlarm(){
+    public static void cancelAlarm(){
         ObjectInputStream ois;
         try {
             ois = new ObjectInputStream(Globals.socket.getInputStream());
             String message = (String) ois.readObject();
-            if(message.equals("CoffeeTime")){
+            if(message.equals("PickedUp")){
                 Globals.mediaPlayer.stop();
             }
         } catch (UnknownHostException e) {

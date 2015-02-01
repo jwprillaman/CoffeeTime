@@ -16,11 +16,6 @@ public class CoffeeReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Toast.makeText(context, "Coffee's 'a brewin'!", Toast.LENGTH_LONG).show();
 
-        /*WifiManager.WifiLock wifiLock = ((WifiManager)context.getSystemService(Context.WIFI_SERVICE))
-                .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
-
-        wifiLock.acquire();*/
-
         new Thread(new ClientThread()).start();
     }
 
